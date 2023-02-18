@@ -33,7 +33,9 @@ const downloadInParallel = async (urls: string[], maxParalellism = 10, throttleI
     console.log('Downloading next', filesToDownload);
     const blobs = await Promise.allSettled(filesToDownload.map(async (url: string) => downloadAsBlob(url)));
     console.log({ blobs });
-    result = result.concat(blobs);
+    console.time('Copying');
+    result.push(...blobs);
+    console.timeEnd('Copying');
     if (throttleInSeconds) await waitForSeconds(throttleInSeconds);
     current.value = current.value + maxParalellism;
   } while (copyOfUrls.length);
